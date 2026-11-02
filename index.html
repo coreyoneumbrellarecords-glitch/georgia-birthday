@@ -1876,21 +1876,21 @@
 
   /* ===================== input polish: cursor, trails, tilt ===================== */
   const cursorEl = $('#cursor');
-  if (FINE && !RM) { document.body.classList.add('has-cursor'); cursorEl.hidden = false; }
-  let tiltFromSensor = false, lastTrail = 0;
+  // real OS cursor is hardware-drawn and lag-free; the DOM cursor trailed a frame behind
+  let tiltFromSensor = false, lastTrail = 0, tiltRaf = 0, tx = 0, ty = 0;
   addEventListener('pointermove', (e) => {
-    if (FINE && !RM) {
-      cursorEl.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
-      cursorEl.classList.toggle('hover', !!e.target.closest?.('button, [role="button"], textarea, .tarot'));
-    }
     const now = performance.now();
     if (!RM && now - lastTrail > (MOBILE ? 40 : 22) && FX.P.length < MAXP - 40) {
       lastTrail = now;
       spawnEmber(e.clientX, e.clientY, { vx: rand(-20, 20), vy: rand(-30, 5), life: rand(0.4, 0.8), size: rand(4, 9), wob: 0, pal: ['crimson', 'violet', 'ember'] });
     }
     if (!tiltFromSensor && FINE) {
-      document.documentElement.style.setProperty('--px', ((e.clientX / innerWidth - 0.5) * 2).toFixed(3));
-      document.documentElement.style.setProperty('--py', ((e.clientY / innerHeight - 0.5) * 2).toFixed(3));
+      tx = e.clientX; ty = e.clientY;
+      tiltRaf ||= requestAnimationFrame(() => {
+        tiltRaf = 0;
+        document.documentElement.style.setProperty('--px', ((tx / innerWidth - 0.5) * 2).toFixed(3));
+        document.documentElement.style.setProperty('--py', ((ty / innerHeight - 0.5) * 2).toFixed(3));
+      });
     }
   }, { passive: true });
   addEventListener('deviceorientation', (e) => {
