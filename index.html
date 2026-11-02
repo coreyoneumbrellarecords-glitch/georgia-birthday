@@ -275,10 +275,12 @@
     }
     .page {
       background: linear-gradient(90deg, rgba(60, 30, 10, 0.35), transparent 7%), radial-gradient(ellipse at 50% 40%, #efe5cf, #d6c39d 95%);
-      color: var(--ink); padding: 20px 24px; overflow-y: auto; text-align: left;
+      color: var(--ink); padding: 20px 24px; overflow-y: auto; max-height: 100%; scrollbar-width: thin; scrollbar-color: #8f0e28 transparent; text-align: left;
       box-shadow: inset 0 0 40px rgba(90, 50, 20, 0.35);
     }
-    #pg0 { display: flex; flex-direction: column; justify-content: center; }
+    .page::-webkit-scrollbar { width: 6px; } .page::-webkit-scrollbar-thumb { background: #8f0e28; border-radius: 3px; }
+    #pg0, #pgL2 { display: flex; flex-direction: column; justify-content: center; }
+    #pgL2 > div { margin: auto 0; }
     .page.turned, .cover.turned { transform: perspective(1800px) rotateY(-172deg); pointer-events: none; }
     .page h3 { font-family: 'UnifrakturMaguntia', cursive; font-weight: normal; font-size: 1.8rem; color: #6a0a1e; text-align: center; margin-bottom: 10px; }
     .page.night { background: radial-gradient(ellipse at 50% 40%, #1b1230, #07050d 90%); color: var(--bone); }
@@ -501,7 +503,7 @@
     <section class="chapter" id="ch5" aria-label="Chapter six: The Grimoire">
       <div class="inner">
         <div class="book par" id="book">
-          <div class="page" id="pg0" style="z-index:5">
+          <div class="page" id="pg0" style="z-index:6">
             <div class="seal-wrap" id="sealWrap">
               <button class="seal" id="seal" aria-label="Break the wax seal">
                 <span class="seal-half left"></span><span class="seal-half right"></span>
@@ -512,10 +514,17 @@
             <div id="letter">
               <div class="letter-body">
                 <p>Happy Birthday Georgia,</p>
-                <p>Wishing the absolute best day to you! You are an amazing, beautiful woman and even with everything you've gone through, you still show up.</p>
-                <p>Every day talking to you just makes me happy and you are very special to me. 🖤</p>
+                <p>Wishing the absolute best day to your beautiful self. You are an amazing, beautiful woman, and even with everything you've gone through, you still show up. Every day talking to you just makes me happy, and you are very special to me.</p>
               </div>
-              <div class="sign-off">💜Corey💜</div>
+            </div>
+          </div>
+          <div class="page" id="pgL2" style="z-index:5">
+            <div id="letter2">
+              <div class="letter-body">
+                <p>Even though we haven’t been talking for that long, it honestly feels like I’ve known you forever. Like I said before, you're literally art to me. Every time we talk, I get that exact same rush in my belly as when the drop hits on the best song I've ever heard. It's like playing a track at maximum volume in a dark room where the sound just takes over your whole chest, and everything else just fades out.</p>
+                <p>Don't let the gooch get in the way today and definitely watch out for Gollum. Have an amazing birthday all the way in Kent.</p>
+                <p style="text-align: right; margin-top: 14px; font-weight: bold;">💜Corey💜</p>
+              </div>
             </div>
           </div>
           <div class="page" id="pg1" style="z-index:4">
@@ -545,7 +554,7 @@
               <button class="btn" id="toFinale">Step into the light ›</button>
             </div>
           </div>
-          <button class="cover" id="cover" style="z-index:6" aria-label="Open the grimoire">
+          <button class="cover" id="cover" style="z-index:7" aria-label="Open the grimoire">
             <span class="cover-sigil" aria-hidden="true">⛧</span>
             <span class="bl">Grimoire</span>
             <small>of the twenty-sixth year</small>
@@ -556,7 +565,7 @@
           <div class="tap-guide" aria-hidden="true">TAP TO TURN PAGE 🥀</div>
           <div class="pager">
             <button class="page-arrow" id="pgPrev" aria-label="Previous page">‹</button>
-            <span id="pgNum">I / V</span>
+            <span id="pgNum">I / VI</span>
             <button class="page-arrow" id="pgNext" aria-label="Next page">›</button>
           </div>
         </div>
@@ -1596,7 +1605,7 @@
   /* =====================================================================
      VI. THE GRIMOIRE
      ===================================================================== */
-  const pages = $$('.page'), ROMAN = ['I', 'II', 'III', 'IV', 'V'];
+  const pages = $$('.page');
   let pg = 0, bookOpen = false;
   function splitChars(el, n) {
     for (const node of [...el.childNodes]) {
@@ -1610,7 +1619,8 @@
     }
     return n;
   }
-  const letterChars = splitChars($('#letter'), 0);
+  splitChars($('#letter'), 0);
+  splitChars($('#letter2'), 0);
   function buildBook() {
     $('#reasons').innerHTML = FALLBACK.reasons.map((fb, i) => `<li style="--i:${i}"></li>`).join('');
     $$('#reasons li').forEach((li, i) => { li.textContent = pick(CONFIG.reasons[i], FALLBACK.reasons[i]); });
@@ -1651,9 +1661,10 @@
   function showPage(i) {
     pg = clamp(i, 0, pages.length - 1);
     pages.forEach((p, j) => p.classList.toggle('turned', j < pg));
-    $('#pgNum').textContent = `${ROMAN[pg]} / ${ROMAN[pages.length - 1]}`;
+    $('#pgNum').textContent = `${ROMAN_N(pg + 1)} / ${ROMAN_N(pages.length)}`;
     $('#pgPrev').disabled = pg === 0; $('#pgNext').disabled = pg === pages.length - 1;
-    if (pg === 1) $('#pg1').classList.add('show-reasons');
+    if (pages[pg].id === 'pg1') $('#pg1').classList.add('show-reasons');
+    if (pages[pg].id === 'pgL2' && $('#sealWrap').classList.contains('broken')) $('#letter2').classList.add('reading-ink');
     if (pg === pages.length - 1) complete();
   }
   function turn(d) {
@@ -1712,7 +1723,7 @@
     $('#cover').classList.remove('turned'); $('#bookNav').classList.add('off');
     pages.forEach((p) => p.classList.remove('turned'));
     pg = 0;
-    $('#sealWrap').classList.remove('broken'); $('#letter').classList.remove('reading-ink');
+    $('#sealWrap').classList.remove('broken'); $('#letter').classList.remove('reading-ink'); $('#letter2').classList.remove('reading-ink');
     $('#pg1').classList.remove('show-reasons');
     const ta = $('#wishText'); ta.value = ''; ta.disabled = false; ta.classList.remove('burnt', 'nope'); $('#burnBtn').disabled = false;
     $('#wishNote').textContent = "It never leaves this page. Once it burns, it's yours and the night's.";
