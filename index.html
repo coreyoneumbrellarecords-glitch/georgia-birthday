@@ -1286,9 +1286,9 @@
     clockState.h = 0; clockState.m = 0; setHands(0, 0);
     const num = $('#tollNum'), lab = $('#tollLabel'), glow = $('#clockGlow');
     num.textContent = '0'; lab.textContent = 'The bell is waking';
-    await wait(1800); if (!alive(run)) return;
+    await wait(900); if (!alive(run)) return;
     for (let y = 1; y <= CONFIG.age; y++) {
-      const dur = RM ? 1 : Math.max(450, 1300 - y * 30), h0 = clockState.h, m0 = clockState.m;
+      const dur = RM ? 1 : Math.max(225, 650 - y * 15), h0 = clockState.h, m0 = clockState.m;
       clockState.h += 30; clockState.m += 360;
       await tween(dur, (k) => { const e = ease(k); setHands(h0 + 30 * e, m0 + 360 * e); });
       if (!alive(run)) return;
@@ -1300,7 +1300,7 @@
       const r = $('#clock').getBoundingClientRect();
       burst(r.left + r.width / 2, r.top + r.height * 0.56, last ? 60 : 14, { max: last ? 320 : 150 });
       if (last) { vib([40, 60, 120]); lab.textContent = 'Twenty-six. The hour has come.'; announce('Twenty-six bells.'); }
-      await wait(Math.max(350, 900 - y * 18)); if (!alive(run)) return;
+      await wait(Math.max(175, 450 - y * 9)); if (!alive(run)) return;
     }
     complete();
   }
