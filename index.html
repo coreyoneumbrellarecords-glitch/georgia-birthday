@@ -101,6 +101,7 @@
     .btn:hover { box-shadow: 0 0 30px rgba(214, 34, 70, 0.75), inset 0 0 12px rgba(0,0,0,0.6); transform: translateY(-1px); }
     .btn:disabled { opacity: 0.5; cursor: default; }
     .btn-ghost { background: rgba(9, 9, 11, 0.6); border-color: #3a1520; font-size: 0.68rem; padding: 10px 16px; box-shadow: none; }
+    .ctrl .btn-ghost { background: rgba(30, 6, 12, 0.88); border: 1.5px solid var(--accent-glow); color: #fff; box-shadow: 0 0 12px rgba(214, 34, 70, 0.5); text-shadow: 0 0 6px rgba(255, 255, 255, 0.3); }
     .btn.ready { border-color: var(--accent-glow); animation: ready 1.8s ease-in-out infinite; }
     @keyframes ready { 50% { box-shadow: 0 0 26px rgba(214, 34, 70, 0.8); } }
 
@@ -263,7 +264,7 @@
     .wish.show { opacity: 1; filter: none; }
 
     /* ---------- VI. grimoire ---------- */
-    .book { position: relative; width: min(92vw, 500px); height: min(64vh, 600px); }
+    .book { position: relative; width: min(92vw, 480px); height: min(56vh, 540px); }
     .book::before { content: ''; position: absolute; left: -10px; top: -8px; bottom: -8px; right: -8px; background: linear-gradient(90deg, #1a0508, #3b0d16 6%, #2a0910); border-radius: 4px 10px 10px 4px; box-shadow: 0 20px 50px rgba(0,0,0,0.9); }
     .page, .cover {
       position: absolute; inset: 0; transform-origin: left center;
@@ -274,11 +275,12 @@
     }
     .page {
       background: linear-gradient(90deg, rgba(60, 30, 10, 0.35), transparent 7%), radial-gradient(ellipse at 50% 40%, #efe5cf, #d6c39d 95%);
-      color: var(--ink); padding: 30px 26px 26px 32px; overflow-y: auto; text-align: left;
+      color: var(--ink); padding: 20px 24px; overflow-y: auto; text-align: left;
       box-shadow: inset 0 0 40px rgba(90, 50, 20, 0.35);
     }
+    #pg0 { display: flex; flex-direction: column; justify-content: center; }
     .page.turned, .cover.turned { transform: perspective(1800px) rotateY(-172deg); pointer-events: none; }
-    .page h3 { font-family: 'UnifrakturMaguntia', cursive; font-weight: normal; font-size: 2rem; color: #6a0a1e; text-align: center; margin-bottom: 14px; }
+    .page h3 { font-family: 'UnifrakturMaguntia', cursive; font-weight: normal; font-size: 1.8rem; color: #6a0a1e; text-align: center; margin-bottom: 10px; }
     .page.night { background: radial-gradient(ellipse at 50% 40%, #1b1230, #07050d 90%); color: var(--bone); }
     .page.night h3 { color: var(--bone); text-shadow: 0 0 12px rgba(155, 77, 255, 0.7); }
     .cover {
@@ -290,11 +292,29 @@
     .cover .bl { font-size: clamp(2.6rem, 11vw, 3.6rem); text-shadow: 0 2px 0 #000, 0 0 16px rgba(212, 164, 58, 0.45); }
     .cover-sigil { font-size: 3rem; text-shadow: 0 0 16px rgba(212,164,58,0.6); }
     .cover small { font-family: 'Cinzel', serif; letter-spacing: 4px; font-size: 0.7rem; text-transform: uppercase; color: #b98b4e; }
-    .book-nav { display: flex; align-items: center; gap: 18px; margin-top: 18px; font-family: 'Cinzel', serif; letter-spacing: 3px; font-size: 0.8rem; color: var(--muted); transition: opacity 0.5s; }
+    .book-nav { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 14px; transition: opacity 0.5s; }
+    .tap-guide { font-family: 'Cinzel', serif; font-weight: 600; font-size: 0.8rem; letter-spacing: 3px; color: var(--accent-glow); animation: guidePulse 1.8s ease-in-out infinite; }
+    @keyframes guidePulse { 0%, 100% { opacity: 0.55; text-shadow: 0 0 4px rgba(214, 34, 70, 0.4); } 50% { opacity: 1; text-shadow: 0 0 10px var(--accent-glow), 0 0 22px rgba(214, 34, 70, 0.6); } }
+    .pager { display: flex; align-items: center; gap: 22px; font-family: 'Cinzel', serif; font-weight: 800; letter-spacing: 4px; font-size: 1rem; color: var(--bone); text-shadow: 0 0 8px rgba(255, 255, 255, 0.35); }
+    .page-arrow {
+      width: 58px; height: 58px; border-radius: 50%; cursor: pointer; display: grid; place-items: center;
+      font-family: 'Playfair Display', serif; font-size: 2.3rem; line-height: 1; padding-bottom: 6px; color: #f4f1ff;
+      background: radial-gradient(circle at 35% 30%, #3a2a3a, #120a10 70%);
+      border: 2px solid #c9c4d6;
+      box-shadow: 0 0 12px rgba(220, 215, 255, 0.45), inset 0 0 10px rgba(255, 255, 255, 0.12);
+      text-shadow: 0 0 8px #fff, 0 0 18px rgba(214, 34, 70, 0.8);
+      transition: transform 0.15s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+    .page-arrow:hover:not(:disabled) { border-color: #fff; box-shadow: 0 0 22px rgba(255, 255, 255, 0.7), 0 0 34px rgba(214, 34, 70, 0.6), inset 0 0 12px rgba(255, 255, 255, 0.2); transform: scale(1.06); }
+    .page-arrow:active:not(:disabled) { transform: scale(0.92); box-shadow: 0 0 30px var(--accent-glow); }
+    .page-arrow:focus-visible { outline: 2px solid var(--accent-glow); outline-offset: 4px; }
+    .page-arrow:disabled { opacity: 0.25; cursor: default; box-shadow: none; }
+    #pgNext:not(:disabled) { animation: nextPulse 1.8s ease-in-out infinite; }
+    @keyframes nextPulse { 50% { box-shadow: 0 0 24px rgba(255, 255, 255, 0.75), 0 0 40px rgba(214, 34, 70, 0.7), inset 0 0 12px rgba(255,255,255,0.2); } }
     .book-nav.off { opacity: 0; pointer-events: none; }
 
-    .letter-body { font-size: 1.08rem; line-height: 1.7; font-style: italic; margin-bottom: 20px; }
-    .letter-body p { margin-bottom: 14px; }
+    .letter-body { font-size: clamp(0.95rem, 3.9vw, 1.1rem); line-height: 1.5; font-style: italic; margin-bottom: 12px; }
+    .letter-body p { margin-bottom: 10px; }
     .sign-off { text-align: right; font-family: 'Cinzel', serif; font-size: 1rem; letter-spacing: 1px; margin-top: 10px; }
     .ch { opacity: 0; }
     .reading-ink .ch { animation: ink 0.6s forwards; animation-delay: calc(var(--d) * 14ms); }
@@ -492,9 +512,8 @@
             <div id="letter">
               <div class="letter-body">
                 <p>Happy Birthday Georgia,</p>
-                <p>Wishing the absolute best day to you. You are an amazing, beautiful woman and even with everything you've gone through, you still show up. Every day talking to you just makes me happy and you are very special to me.</p>
-                <p>Even though we haven’t been talking for that long, it honestly feels like I’ve known you forever. Like I said before, you're literally art to me. Every time we talk, I get that exact same rush in my belly as when the drop hits on the best song I've ever heard. It's like playing a track at maximum volume in a dark room where the sound just takes over your whole chest and everything else just fades out.</p>
-                <p>Don't let the gooch get in the way today, and definitely watch out for Gollum. Have an amazing birthday all the way in Kent.</p>
+                <p>Wishing the absolute best day to you! You are an amazing, beautiful woman and even with everything you've gone through, you still show up.</p>
+                <p>Every day talking to you just makes me happy and you are very special to me. 🖤</p>
               </div>
               <div class="sign-off">💜Corey💜</div>
             </div>
@@ -534,9 +553,12 @@
           </button>
         </div>
         <div class="book-nav off" id="bookNav">
-          <button class="icon-btn" id="pgPrev" aria-label="Previous page">‹</button>
-          <span id="pgNum">I / V</span>
-          <button class="icon-btn" id="pgNext" aria-label="Next page">›</button>
+          <div class="tap-guide" aria-hidden="true">TAP TO TURN PAGE 🥀</div>
+          <div class="pager">
+            <button class="page-arrow" id="pgPrev" aria-label="Previous page">‹</button>
+            <span id="pgNum">I / V</span>
+            <button class="page-arrow" id="pgNext" aria-label="Next page">›</button>
+          </div>
         </div>
       </div>
     </section>
