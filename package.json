@@ -1,0 +1,25 @@
+{
+  "name": "georgia-birthday",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node tests/walkthrough.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coreyoneumbrellarecords-glitch/georgia-birthday.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/coreyoneumbrellarecords-glitch/georgia-birthday/issues"
+  },
+  "homepage": "https://github.com/coreyoneumbrellarecords-glitch/georgia-birthday#readme",
+  "devDependencies": {
+    "playwright": "^1.64.1"
+  },
+  "private": "true"
+}
