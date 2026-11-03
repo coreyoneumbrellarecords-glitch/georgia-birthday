@@ -342,8 +342,8 @@
     .seal-hint { font-family: 'Cinzel', serif; letter-spacing: 3px; text-transform: uppercase; font-size: 0.72rem; color: #8f0e28; }
 
     .reasons { list-style: none; counter-reset: r; }
-    .reasons li { counter-increment: r; display: flex; gap: 12px; padding: 7px 0; border-bottom: 1px dashed rgba(106, 10, 30, 0.25); font-style: italic; line-height: 1.45; opacity: 0; transform: translateX(-8px); }
-    .reasons li::before { content: counter(r, upper-roman); flex: none; width: 46px; text-align: right; font-family: 'Cinzel', serif; font-style: normal; font-weight: 800; color: #8f0e28; font-size: 0.8rem; padding-top: 3px; }
+    .reasons li { counter-increment: r; display: flex; gap: 12px; padding: 4px 0; font-size: 0.9rem; border-bottom: 1px dashed rgba(106, 10, 30, 0.25); font-style: italic; line-height: 1.45; opacity: 0; transform: translateX(-8px); }
+    .reasons li::before { content: counter(r, upper-roman); flex: none; width: 40px; text-align: right; font-family: 'Cinzel', serif; font-style: normal; font-weight: 800; color: #8f0e28; font-size: 0.8rem; padding-top: 3px; }
     .show-reasons .reasons li { animation: rIn 0.6s forwards; animation-delay: calc(var(--i) * 90ms + 0.6s); }
     @keyframes rIn { to { opacity: 1; transform: none; } }
 
@@ -503,7 +503,7 @@
     <section class="chapter" id="ch5" aria-label="Chapter six: The Grimoire">
       <div class="inner">
         <div class="book par" id="book">
-          <div class="page" id="pg0" style="z-index:6">
+          <div class="page" id="pg0" style="z-index:7">
             <div class="seal-wrap" id="sealWrap">
               <button class="seal" id="seal" aria-label="Break the wax seal">
                 <span class="seal-half left"></span><span class="seal-half right"></span>
@@ -518,7 +518,7 @@
               </div>
             </div>
           </div>
-          <div class="page" id="pgL2" style="z-index:5">
+          <div class="page" id="pgL2" style="z-index:6">
             <div id="letter2">
               <div class="letter-body">
                 <p>Even though we haven’t been talking for that long, it honestly feels like I’ve known you forever. Like I said before, you're literally art to me. Every time we talk, I get that exact same rush in my belly as when the drop hits on the best song I've ever heard. It's like playing a track at maximum volume in a dark room where the sound just takes over your whole chest, and everything else just fades out.</p>
@@ -527,9 +527,13 @@
               </div>
             </div>
           </div>
-          <div class="page" id="pg1" style="z-index:4">
+          <div class="page" id="pg1" style="z-index:5">
             <h3>Twenty-Six Reasons</h3>
             <ol class="reasons" id="reasons"></ol>
+          </div>
+          <div class="page" id="pgR2" style="z-index:4">
+            <h3>Twenty-Six Reasons</h3>
+            <ol class="reasons" id="reasons2" style="counter-reset: r 13"></ol>
           </div>
           <div class="page" id="pg2" style="z-index:3">
             <h3>The Wish Scroll</h3>
@@ -1632,8 +1636,11 @@
   splitChars($('#letter'), 0);
   splitChars($('#letter2'), 0);
   function buildBook() {
-    $('#reasons').innerHTML = FALLBACK.reasons.map((fb, i) => `<li style="--i:${i}"></li>`).join('');
-    $$('#reasons li').forEach((li, i) => { li.textContent = pick(CONFIG.reasons[i], FALLBACK.reasons[i]); });
+    // split 13/13 across two pages so every reason fits
+    const half = Math.ceil(FALLBACK.reasons.length / 2);
+    $('#reasons').innerHTML = FALLBACK.reasons.slice(0, half).map((fb, i) => `<li style="--i:${i}"></li>`).join('');
+    $('#reasons2').innerHTML = FALLBACK.reasons.slice(half).map((fb, i) => `<li style="--i:${i}"></li>`).join('');
+    $$('#reasons li, #reasons2 li').forEach((li, i) => { li.textContent = pick(CONFIG.reasons[i], FALLBACK.reasons[i]); });
     if (filled(CONFIG.insideJoke)) { const j = $('#insideJoke'); j.textContent = CONFIG.insideJoke; j.hidden = false; }
     // constellation: 26 seeded stars, each linked to its nearest neighbour
     const R = mulberry(26), pts = [];
@@ -1673,7 +1680,7 @@
     pages.forEach((p, j) => p.classList.toggle('turned', j < pg));
     $('#pgNum').textContent = `${ROMAN_N(pg + 1)} / ${ROMAN_N(pages.length)}`;
     $('#pgPrev').disabled = pg === 0; $('#pgNext').disabled = pg === pages.length - 1;
-    if (pages[pg].id === 'pg1') $('#pg1').classList.add('show-reasons');
+    if (pages[pg].id === 'pg1' || pages[pg].id === 'pgR2') pages[pg].classList.add('show-reasons');
     if (pages[pg].id === 'pgL2' && $('#sealWrap').classList.contains('broken')) $('#letter2').classList.add('reading-ink');
     if (pg === pages.length - 1) complete();
   }
@@ -1734,7 +1741,7 @@
     pages.forEach((p) => p.classList.remove('turned'));
     pg = 0;
     $('#sealWrap').classList.remove('broken'); $('#letter').classList.remove('reading-ink'); $('#letter2').classList.remove('reading-ink');
-    $('#pg1').classList.remove('show-reasons');
+    $('#pg1').classList.remove('show-reasons'); $('#pgR2').classList.remove('show-reasons');
     const ta = $('#wishText'); ta.value = ''; ta.disabled = false; ta.classList.remove('burnt', 'nope'); $('#burnBtn').disabled = false;
     $('#wishNote').textContent = "It never leaves this page. Once it burns, it's yours and the night's.";
     $$('.star.lit').forEach((s) => s.classList.remove('lit'));

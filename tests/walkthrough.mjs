@@ -125,12 +125,14 @@ async function run(label, viewport, mobile) {
       await page.waitForTimeout(3000);
       if (!(await page.locator('#letter.reading-ink').count())) throw new Error('seal did not start the letter');
       await shot('grimoire-letter');
-      if ((await page.textContent('#pgNum')).trim() !== 'I / VI') throw new Error('page counter not I / VI');
+      if ((await page.textContent('#pgNum')).trim() !== 'I / VII') throw new Error('page counter not I / VII');
       await tap('#pgNext'); await page.waitForTimeout(2500);
       if (!(await page.locator('#letter2.reading-ink').count())) throw new Error('letter part 2 did not ink in');
       await shot('grimoire-letter-2');
       await tap('#pgNext'); await page.waitForTimeout(3500);
       await shot('grimoire-reasons');
+      await tap('#pgNext'); await page.waitForTimeout(2500);
+      await shot('grimoire-reasons-2');
       await tap('#pgNext'); await page.waitForTimeout(1300);
       await page.fill('#wishText', 'A year as loud and lovely as she is');
       await tap('#burnBtn'); await page.waitForTimeout(1200);
