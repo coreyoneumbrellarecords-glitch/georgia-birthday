@@ -1857,7 +1857,7 @@
     s.classList.add('active'); s.scrollTop = 0;
     $$('.node').forEach((n, j) => { n.classList.toggle('current', j === i); n.classList.toggle('visited', visited.has(j)); n.setAttribute('aria-current', j === i ? 'step' : 'false'); });
     $('#chTitle').textContent = `${ROMAN_N(i + 1)} · ${CH[i].name}`;
-    skipBtn.textContent = 'Skip ›'; skipBtn.classList.remove('ready'); skipBtn.hidden = i === CH.length - 1;
+    skipBtn.textContent = 'Skip ›'; skipBtn.classList.remove('ready'); skipBtn.hidden = true; // no skipping: shown only once the chapter is done
     FX.amb = Object.assign({}, CH[i].amb);
     if (RM) for (const k in FX.amb) FX.amb[k] = Math.ceil(FX.amb[k] / 3);
     FX.P = FX.P.filter((p) => !p.amb || p.k === 'mist');
@@ -1865,7 +1865,7 @@
     announce(`Chapter ${i + 1}: ${CH[i].name}`);
     CH[i].enter(runId);
   }
-  function complete() { if (cur < CH.length - 1) { skipBtn.textContent = 'Continue ›'; skipBtn.classList.add('ready'); } }
+  function complete() { if (cur < CH.length - 1) { skipBtn.textContent = 'Continue ›'; skipBtn.classList.add('ready'); skipBtn.hidden = false; } }
   skipBtn.addEventListener('click', () => { audioInit(); go(cur + 1); });
   $('#replayCh').addEventListener('click', () => { audioInit(); go(cur); });
   $('#muteBtn').addEventListener('click', () => { audioInit(); setMuted(!A.muted); });
